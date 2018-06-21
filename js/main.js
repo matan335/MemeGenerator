@@ -1,69 +1,38 @@
 var gCurrMeme;
-var gCanvas=document.querySelector('.canvas')
-var gCtx= gCanvas.getContext('2d');
-var lastTextLength=0;
-var lastText;
+var gCanvas = document.querySelector('.canvas');
+var gCtx = gCanvas.getContext('2d');
+var lastTextLength =[0];
+var lastText=[];
+var gLineNum=0;
 var gImgs = [
-    { id: 0, url: 'img/2.jpg', keywords: ['happy'] },
-    { id: 1, url: 'img/5.jpg', keywords: ['happy'] },
-    { id: 2, url: 'img/9.jpg', keywords: ['funny'] },
-
+    { id: 0, url: 'img/img11.jpg', keywords: ['Happy', 'Funny'] },
+    { id: 1, url: 'img/19.jpg', keywords: ['Angry'] },
+    { id: 2, url: 'img/9.jpg', keywords: ['Funny'] },
+    { id: 3, url: 'img/003.jpg', keywords: ['Angry'] },
+    { id: 4, url: 'img/drevil.jpg', keywords: ['Funny'] },
+    { id: 5, url: 'img/004.jpg', keywords: ['Funny'] },
+    { id: 6, url: 'img/img12.jpg', keywords: ['Akward'] },
 ];
-var gMemes = [ {
+var gMeme = {
     selectedImgId: 0,
-    txts: 
-        {
-            line: '',
-            size: 20,
-            align: 'left',
-            color: 'Black',
-            height:50
-
-        }
-    },
-    {
-   
-    selectedImgId: 1,
     txts:
-        {
-            line: '',
-            size: 20,
-            align: 'left',
-            color: 'Black',
-            height:50
-        }
-    },
-    {
-    selectedImgId: 2,
-    txts: 
-        {
-            line: '',
-            size: 20,
-            align: 'left',
-            color: 'white',
-            height:50
-        }
-    },
+    [{
+        line: '',
+        size: 65,
+        align: 'left',
+        textStart:50,
+        color: 'White',
+        height: 70,
+        shadow:false,
+        font:'Impact'
 
-]
+    }]
+};
 
-function init(){
-    renderMemeGallery()
-}
+function init() {
+    renderMemeGallery(gImgs);
+};
 
 
-function renderMemeGallery() {
-    var elGallery = $('.container')
-    var renderMemesImg = gMemes.map(function (meme){
-        var renderMemeImg =
-            `
-         <img class="meme-img meme-${meme.selectedImgId}" src="${gImgs[meme.selectedImgId].url}" onclick=renderEditor(${meme.selectedImgId})>
-         `
-        return renderMemeImg;
-
-    });
-    renderMemesImg = renderMemesImg.join('');
-    elGallery.html(renderMemesImg);
-}
 
 

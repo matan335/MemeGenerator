@@ -21,40 +21,99 @@
 
 <body onload="init()">
 
+
   <div class="container">
-    
 
 
+
+  </div>
+  <div class="filter">
+      <label for="filter" class="sr-only">Filter images: </label>
+      <input type="text" id="filter" list="keywords" placeholder="Filter images..." oninput="renderFilteredGallery()">
+      <datalist id="keywords" onselect="renderFilteredGallery()"></datalist>
+      </div>
+
+  <div class="dropdown">
+    <div>
+
+    </div>
+    <button class="dropbtn btn meme-filter">Sort memes by</button>
+    <div class="dropdown-content">
+      <a class="btn" onclick="filterChange('All')">All</a>
+      <a class="btn" onclick="filterChange('Happy')">Happy</a>
+      <a class="btn" onclick="filterChange('Funny')">Funny</a>
+      <a class="btn" onclick="filterChange('Angry')">Angry</a>
+      <a class="btn" onclick="filterChange('Akward')">Akward</a>
+
+    </div>
   </div>
 
 
 
   <div class="editor hideContent">
-    <button onclick="backToGallery()">Back</button>
     <div class="img-container">
-      <canvas class="canvas" width="500" height="500">
+      <button class="btn img-container-btn" onclick="backToGallery()">Back</button>
+      <a class="download-btn img-container-btn" onclick="downloadCanvas(this)">Download</a>
+      <canvas class="canvas" width="600" height="400">
       </canvas>
+
     </div>
-    <div class="img-editor">
-      <div class="img-editor-container">
-        Type your line
-        <input type="text" class="meme-text" oninput="renderText()">
-        <button class="btn"onclick="changeLineHeight('+')">+</button>
-        <button class="btn" onclick="changeLineHeight('-')">-</button>
+    <div class="img-editor-container">
+      <div class="meme-lines">
+        <div class="text-line-0 line-container">
+
+
+          Plese type
+          <button class="btn danger-btn" onclick="deleteLine(0)">x</button>
+          <input type="text" class="meme-text0" oninput="renderText(this.value)" onclick="changeLine(0)">
+        </div>
+      </div>
+      <button class="btn" onclick="addNewLine()">add Line</button>
+
+      <span class="btngroup">
+        <button class="btn btngroup--btn" onclick="alignChange('left')">left</button>
+        <button class="btn btngroup--btn" onclick="alignChange('center')">center</button>
+        <button class="btn btngroup--btn" onclick="alignChange('right')">right</button>
+      </span>
+
+      <span class="btngroup">
+        <button class="btn btngroup--btn" onclick="changeLinePos('+')">+</button>
+        <button class="btn btngroup--btn" onclick="changeLinePos('-')">-</button>
+      </span>
+
+      Text Shadow:
+      <div>
+        <label class="switch">
+          <input type="checkbox">
+          <span class="slider round" onclick="toggleShadow()"></span>
+        </label>
+      </div>
+
+      <div class="controls">
+        <button class="btn" onclick="changeLinePos('+')">↑</button>
+        <div class="align-x">
+          <button class="btn arrow-horizontal" onclick="changeLinePos('left')">←</button>
+          <button class="btn arrow-horizontal" onclick="changeLinePos('right')">→</button>
+        </div>
+        <button class="btn" onclick="changeLinePos('-')">↓</button>
+
+      </div>
+
+      <div class="font-options">
         <div class="dropdown">
           <div>
             Color:
             <span class="curr-color"></span>
           </div>
-          <button class="dropbtn">Color</button>
+          <button class="dropbtn btn">Color</button>
           <div class="dropdown-content">
-            <a onclick="colorChange('Pink')">Pink</a>
-            <a onclick="colorChange('White')">White</a>
-            <a onclick="colorChange('Green')">Green</a>
-            <a onclick="colorChange('Black')">Black</a>
-            <a onclick="colorChange('brown')">Brown</a>
-            <a onclick="colorChange('Blue')">Blue</a>
-            <a onclick="colorChange('Red')">Red</a>
+            <a class="btn" onclick="colorChange('Pink')">Pink</a>
+            <a class="btn" onclick="colorChange('White')">White</a>
+            <a class="btn" onclick="colorChange('Green')">Green</a>
+            <a class="btn" onclick="colorChange('Black')">Black</a>
+            <a class="btn" onclick="colorChange('brown')">Brown</a>
+            <a class="btn" onclick="colorChange('Blue')">Blue</a>
+            <a class="btn" onclick="colorChange('Red')">Red</a>
           </div>
         </div>
 
@@ -64,38 +123,89 @@
             Font size:
             <span class="font-size"></span>
           </div>
-          <button class="dropbtn">font</button>
+          <button class="dropbtn btn">font</button>
           <div class="dropdown-content">
-            <a onclick="fontChange(15)">15</a>
-            <a onclick="fontChange(20)">20</a>
-            <a onclick="fontChange(25)">25</a>
-            <a onclick="fontChange(30)">30</a>
-            <a onclick="fontChange(35)">35</a>
-            <a onclick="fontChange(40)">40</a>
+            <a class="btn" onclick="fontSizeChange(15)">15</a>
+            <a class="btn" onclick="fontSizeChange(25)">25</a>
+            <a class="btn" onclick="fontSizeChange(35)">35</a>
+            <a class="btn" onclick="fontSizeChange(65)">65</a>
+            <a class="btn" onclick="fontSizeChange(70)">70</a>
+            <a class="btn" onclick="fontSizeChange(75)">75</a>
           </div>
         </div>
 
 
+        <div class="dropdown">
+          <div>
+            Font family:
+            <span class="curr-font-family"></span>
+          </div>
+          <button class="dropbtn btn">font</button>
+          <div class="dropdown-content">
+            <a class="btn" onclick="fontFamilyChange('Arial')">Arial</a>
+            <a class="btn" onclick="fontFamilyChange('Impact')">Impact</a>
+            <a class="btn" onclick="fontFamilyChange('Franklin Gothic Bold')">Franklin Gothic Bold</a>
+            <a class="btn" onclick="fontFamilyChange('Bitstream Vera Sans Bold')">Bitstream Vera Sans Bold,</a>
+
+          </div>
+        </div>
 
       </div>
 
-    </div>
 
 
-      <a class="btn download-btn" onclick="downloadCanvas(this)">Download</a>
-
-    
-      <div class="pic-for-canvas">
 
     </div>
 
   </div>
-  
+
+  <div class="footer">
+    <h1>
+      Matan Turgeman
+    </h1>
+    <h2>
+      High quality coder
+    </h2>
+    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempore ullam adipisci commodi aliquid aspernatur in deserunt itaque
+    nesciunt non ut. Quod libero itaque voluptates voluptatibus corrupti fugiat repellat soluta ipsam?
+    <div class="contect-me">
+
+      <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title"></h5>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                </div>
+              </div>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <p>Your E-mail adress:</p>
+                <input type="email" class="mail-control" id="exampleDropdownFormEmail1" placeholder="email@example.com">
+                <p>Subject:</p>
+                <input type="email" class="sub-control" id="exampleDropdownFormEmail1" placeholder="Type you subject here">
+
+                <label for="exampleFormControlTextarea1">massage Body</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Type you massage here"></textarea>
+                <button type="button" class="btn btn-primary" onclick="sumbit()">Submit</button>
+
+              </div>
+            </div>
+            <div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
 
   <script src="vendor/jquery/jquery.min.js"></script>
-  <!-- <script src="vendor/popper/popper.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.min.js"></script> -->
-
   <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
   <script src="js/main.js"></script>
   <script src="js/meme-service.js"></script>
