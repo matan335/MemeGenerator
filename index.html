@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Meme Generator</title>
+  <!-- <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"> -->
+  <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+  <link href="css/main.css" rel="stylesheet">
+
+</head>
+
+<body onload="init()">
+
+  <div class="container">
+    
+
+
+  </div>
+
+
+
+  <div class="editor hideContent">
+    <button onclick="backToGallery()">Back</button>
+    <div class="img-container">
+      <canvas class="canvas" width="500" height="500">
+      </canvas>
+    </div>
+    <div class="img-editor">
+      <div class="img-editor-container">
+        Type your line
+        <input type="text" class="meme-text" oninput="renderText()">
+        <button class="btn"onclick="changeLineHeight('+')">+</button>
+        <button class="btn" onclick="changeLineHeight('-')">-</button>
+        <div class="dropdown">
+          <div>
+            Color:
+            <span class="curr-color"></span>
+          </div>
+          <button class="dropbtn">Color</button>
+          <div class="dropdown-content">
+            <a onclick="colorChange('Pink')">Pink</a>
+            <a onclick="colorChange('White')">White</a>
+            <a onclick="colorChange('Green')">Green</a>
+            <a onclick="colorChange('Black')">Black</a>
+            <a onclick="colorChange('brown')">Brown</a>
+            <a onclick="colorChange('Blue')">Blue</a>
+            <a onclick="colorChange('Red')">Red</a>
+          </div>
+        </div>
+
+
+        <div class="dropdown">
+          <div>
+            Font size:
+            <span class="font-size"></span>
+          </div>
+          <button class="dropbtn">font</button>
+          <div class="dropdown-content">
+            <a onclick="fontChange(15)">15</a>
+            <a onclick="fontChange(20)">20</a>
+            <a onclick="fontChange(25)">25</a>
+            <a onclick="fontChange(30)">30</a>
+            <a onclick="fontChange(35)">35</a>
+            <a onclick="fontChange(40)">40</a>
+          </div>
+        </div>
+
+
+
+      </div>
+
+    </div>
+
+
+      <a class="btn download-btn" onclick="downloadCanvas(this)">Download</a>
+
+    
+      <div class="pic-for-canvas">
+
+    </div>
+
+  </div>
+  
+
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <!-- <script src="vendor/popper/popper.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.min.js"></script> -->
+
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/meme-service.js"></script>
+</body>
+
+</html>
