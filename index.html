@@ -20,33 +20,45 @@
 </head>
 
 <body onload="init()">
+  <div class="selected-keywords">
+    <div class=" search-key all" onclick="renderFilteredGallery('')">
+      all
+    </div>
+    <div class="search-key happy" onclick="renderFilteredGallery('happy','click')">
+    </div>
+    <div class="search-key angry" onclick="renderFilteredGallery('angry','click')">
+    </div>
+    <div class="search-key funny" onclick="renderFilteredGallery('funny','click')">
+    </div>
+    <div class="search-key awkward" onclick="renderFilteredGallery('awkward','click')">
+    </div>
+    <div class="">
+    </div>
+    <div class="">
+    </div>
+  </div>
 
+  <form role="search" class="search-container">
+    <div class="filter">
+      Search meme by filter:
+      <label for="filter" class="sr-only">Filter images: </label>
+      <input type="search" id="filter" list="keywords" placeholder="Filter images..." oninput="renderFilteredGallery(this.value)" name="">
+      <datalist id="keywords" onselect="renderFilteredGallery()">
+        <option value="Happy" onclick="renderFilteredGallery(this.value)">
+        <option value="Funny" onclick="renderFilteredGallery(this.value)">
+        <option value="Angry" onclick="renderFilteredGallery(this.value)">
+        <option value="Awkward" onclick="renderFilteredGallery(this.value)">
+      </datalist>
+    </div>
+  </form>
 
   <div class="container">
 
 
 
   </div>
-  <div class="filter">
-      <label for="filter" class="sr-only">Filter images: </label>
-      <input type="text" id="filter" list="keywords" placeholder="Filter images..." oninput="renderFilteredGallery()">
-      <datalist id="keywords" onselect="renderFilteredGallery()"></datalist>
-      </div>
 
-  <div class="dropdown">
-    <div>
 
-    </div>
-    <button class="dropbtn btn meme-filter">Sort memes by</button>
-    <div class="dropdown-content">
-      <a class="btn" onclick="filterChange('All')">All</a>
-      <a class="btn" onclick="filterChange('Happy')">Happy</a>
-      <a class="btn" onclick="filterChange('Funny')">Funny</a>
-      <a class="btn" onclick="filterChange('Angry')">Angry</a>
-      <a class="btn" onclick="filterChange('Akward')">Akward</a>
-
-    </div>
-  </div>
 
 
 
@@ -128,8 +140,8 @@
             <a class="btn" onclick="fontSizeChange(15)">15</a>
             <a class="btn" onclick="fontSizeChange(25)">25</a>
             <a class="btn" onclick="fontSizeChange(35)">35</a>
-            <a class="btn" onclick="fontSizeChange(65)">65</a>
-            <a class="btn" onclick="fontSizeChange(70)">70</a>
+            <a class="btn" onclick="fontSizeChange(40)">40</a>
+            <a class="btn" onclick="fontSizeChange(60)">60</a>
             <a class="btn" onclick="fontSizeChange(75)">75</a>
           </div>
         </div>
@@ -166,8 +178,10 @@
     <h2>
       High quality coder
     </h2>
-    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempore ullam adipisci commodi aliquid aspernatur in deserunt itaque
-    nesciunt non ut. Quod libero itaque voluptates voluptatibus corrupti fugiat repellat soluta ipsam?
+    <p>
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempore ullam adipisci commodi aliquid aspernatur in deserunt itaque
+      nesciunt non ut. Quod libero itaque voluptates voluptatibus corrupti fugiat repellat soluta ipsam?
+    </p>
     <div class="contect-me">
 
       <div class="modal" tabindex="-1" role="dialog">
@@ -207,6 +221,7 @@
 
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+  <script src="js/utiles.js"></script>
   <script src="js/main.js"></script>
   <script src="js/meme-service.js"></script>
 </body>

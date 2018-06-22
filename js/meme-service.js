@@ -9,7 +9,6 @@ function renderMemeGallery(imgs) {
         return renderMemeImg;
 
     });
-    // elGallery.append(renderMemesImgs);
     elGallery.html(renderMemesImgs);
 };
 function clearGallery() {
@@ -18,8 +17,11 @@ function clearGallery() {
 
 }
 function renderEditor(selectedImgId) {
+    window.scrollTo(0, 0);
     hideAndShow('container', 'editor');
     hideAndShow('meme-filter');
+    hideAndShow('search-container')
+    hideAndShow('selected-keywords')
     gMeme.selectedImgId = selectedImgId;
     renderCanvas(gMeme.selectedImgId);
 }
@@ -144,6 +146,8 @@ function backToGallery() {
     $('.meme-lines').html('Plese type <input type="text" class="meme-text0" oninput="renderText(this.value)" onclick="changeLine(0)">')
     hideAndShow('editor', 'container');
     hideAndShow('', 'meme-filter');
+    hideAndShow('', 'search-container')
+    hideAndShow('', 'selected-keywords')
 
 }
 
@@ -153,7 +157,7 @@ function resetMeme() {
         txts:
             [{
                 line: '',
-                size: 65,
+                size: 40,
                 align: 'left',
                 textStart: 50,
                 color: 'White',
@@ -170,7 +174,7 @@ function addNewLine() {
     gMeme.txts.push(
         {
             line: '',
-            size: 65,
+            size: 40,
             align: 'left',
             textStart: 50,
             color: 'White',
@@ -239,48 +243,84 @@ function sumbit() {
     var mailContent = $('.mail-control').val()
     var subContent = $('.sub-control').val()
     var textContent = $('.form-control').val()
-    // var window = window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${mailContent}&su=${subContent}&body=${textContent}`, '_blank');
-    // window.focus();
     window.location.assign(`https://mail.google.com/mail/?view=cm&fs=1&to=${mailContent}&su=${subContent}&body=${textContent}`)
 
 }
 
 
-function renderFilteredGallery() {
-
-    // debugger;
-    var elKeywordsFilter = document.querySelector('#filter');
-    var filterBy = (elKeywordsFilter.value)
-    // Filter images
-    // var filteredImages = gImgs.forEach(function (image) {
-    //     var keywords = image.keywords
-    //     var newKeyword;
-    //     console.log(keywords)
-    //     for (i = 0; i < keywords.length; i++) {
-    //         console.log('la');
-            
-    //         newKeyword = keywords[i]
-    //         newKeyword.toUpperCase();
-    //         return newKeyword.includes(filterBy);
-    //     }
-
-// });
-console.log('filter by', filterBy)
-
-var filteredImages =  gImgs.filter(function(img){
-    for (i = 0; i < img.keywords.length; i++) {
-        img.keywords[i]=img.keywords[i].toLowerCase()
-
-        
+function renderFilteredGallery(filterBy, isClick) {
+    if (filterBy === '') {
+        renderMemeGallery(gImgs)
+        return;
     }
-    return img.keywords.includes(filterBy)
-   })
+    var isFoundMatch = false;
+    if (isClick) isFoundMatch = true;
+    if (!filterBy) {
+        var elKeywordsFilter = $('#filter');
+        var filterBy = elKeywordsFilter.value
+    }
+    filterBy = filterBy.toLowerCase();
+    var filteredImages = gImgs.filter(function (img) {
+        var matchedImg = false;
+        for (i = 0; i < img.keywords.length; i++) {
+            var keywords = []
+            var keywordStr = img.keywords[i]
+            keywordStr = keywordStr.toLowerCase();
+            keywords.push(keywordStr)
+            if (keywordStr.includes(filterBy)) {
+                matchedImg = true;
+            }
+            if (keywordStr === filterBy && !isFoundMatch) {
 
-   console.log(filteredImages);
-   
-        
+                isFoundMatch = true;
+                var selector = '.' + keywordStr;
+                if ($(selector).text() === keywordStr) {
+                    var selectedKeyword = findFilterInModal(filterBy)
+                    var currkeywordText = selectedKeyword[0].keyword
+                    var currkeywordSize = selectedKeyword[0].size
+                    currkeywordSize = +currkeywordSize;
+                    var newSize = (currkeywordSize + 10)
+                    $(selector).css('font-size', newSize + 'px');
+                    selectedKeywordsMap[selectedKeyword[0].id].keyword = currkeywordText
+                    selectedKeywordsMap[selectedKeyword[0].id].size = newSize
 
+                }
+                else {
+                    var selectedKeyword = findFilterInModal(filterBy)
+                    if (!selectedKeyword[0]) {
+                        var txt = filterBy;
+                        var size = 20;
+                        var currkeyword = {'id':selectedKeywordsMap.length,'keyword': txt, 'size':size }
+                        selectedKeywordsMap.push(currkeyword)
+                    }
+                    else{
+                        var txt=selectedKeyword[0].keyword
+                        var size=selectedKeyword[0].size
+                    }
 
-    renderMemeGallery(filteredImages)
+                }
+                debugger;
+
+                $(selector).html(txt);
+                $(selector).css('font-size',size + 'px')
+                saveToStorage(KeyForStorage, selectedKeywordsMap)
+            }
+        }
+        return matchedImg
+    })
+    renderMemeGallery(filteredImages);
+}
+function findFilterInModal(currFilter) {
+    var foundKeyword = selectedKeywordsMap.filter(function (keyword) {
+        return (keyword.keyword === currFilter)
+    })
+    return foundKeyword
 }
 
+function renderselectedKeywords() {
+    selectedKeywordsMap.map(function (keyword) {
+        renderFilteredGallery(keyword.keyword)
+    });
+    renderMemeGallery(gImgs)
+
+}
