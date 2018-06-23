@@ -9,7 +9,6 @@
   <meta name="author" content="">
 
   <title>Meme Generator</title>
-  <!-- <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"> -->
   <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
   <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
@@ -20,34 +19,27 @@
 </head>
 
 <body onload="init()">
+  <div class="navbar">
+    <a class="nav-title">Meme Generator</a>
+    <a href="#home">Home</a>
+    <a href="#news">News</a>
+    <a href="#contact" onclick="gotoContact()">Contact</a>
+  </div>
   <div class="selected-keywords">
-    <div class=" search-key all" onclick="renderFilteredGallery('')">
-      all
-    </div>
-    <div class="search-key happy" onclick="renderFilteredGallery('happy','click')">
-    </div>
-    <div class="search-key angry" onclick="renderFilteredGallery('angry','click')">
-    </div>
-    <div class="search-key funny" onclick="renderFilteredGallery('funny','click')">
-    </div>
-    <div class="search-key awkward" onclick="renderFilteredGallery('awkward','click')">
-    </div>
-    <div class="">
-    </div>
-    <div class="">
-    </div>
+
   </div>
 
   <form role="search" class="search-container">
     <div class="filter">
       Search meme by filter:
       <label for="filter" class="sr-only">Filter images: </label>
-      <input type="search" id="filter" list="keywords" placeholder="Filter images..." oninput="renderFilteredGallery(this.value)" name="">
-      <datalist id="keywords" onselect="renderFilteredGallery()">
+      <input type="search" id="filter" list="keywords" placeholder="Filter images..." oninput="renderFilteredGallery(this.value)"
+        name="">
+      <datalist id="keywords">
         <option value="Happy" onclick="renderFilteredGallery(this.value)">
-        <option value="Funny" onclick="renderFilteredGallery(this.value)">
-        <option value="Angry" onclick="renderFilteredGallery(this.value)">
-        <option value="Awkward" onclick="renderFilteredGallery(this.value)">
+          <option value="Funny" onclick="renderFilteredGallery(this.value)">
+            <option value="Angry" onclick="renderFilteredGallery(this.value)">
+              <option value="Awkward" onclick="renderFilteredGallery(this.value)">
       </datalist>
     </div>
   </form>
@@ -87,12 +79,6 @@
         <button class="btn btngroup--btn" onclick="alignChange('center')">center</button>
         <button class="btn btngroup--btn" onclick="alignChange('right')">right</button>
       </span>
-
-      <span class="btngroup">
-        <button class="btn btngroup--btn" onclick="changeLinePos('+')">+</button>
-        <button class="btn btngroup--btn" onclick="changeLinePos('-')">-</button>
-      </span>
-
       Text Shadow:
       <div>
         <label class="switch">
@@ -172,16 +158,18 @@
   </div>
 
   <div class="footer">
-    <h1>
-      Matan Turgeman
-    </h1>
-    <h2>
-      High quality coder
-    </h2>
-    <p>
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempore ullam adipisci commodi aliquid aspernatur in deserunt itaque
-      nesciunt non ut. Quod libero itaque voluptates voluptatibus corrupti fugiat repellat soluta ipsam?
-    </p>
+    <div class="footer-text">
+      <h1>
+        Matan Turgeman
+      </h1>
+      <h2>
+        High quality developer
+      </h2>
+      <p>
+        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempore ullam adipisci commodi aliquid aspernatur in deserunt itaque
+        nesciunt non ut. Quod libero itaque voluptates voluptatibus corrupti fugiat repellat soluta ipsam?
+      </p>
+    </div>
     <div class="contect-me">
 
       <div class="modal" tabindex="-1" role="dialog">
@@ -201,7 +189,7 @@
                 <p>Subject:</p>
                 <input type="email" class="sub-control" id="exampleDropdownFormEmail1" placeholder="Type you subject here">
 
-                <label for="exampleFormControlTextarea1">massage Body</label>
+                <p>Massage Body:</p>
                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Type you massage here"></textarea>
                 <button type="button" class="btn btn-primary" onclick="sumbit()">Submit</button>
 

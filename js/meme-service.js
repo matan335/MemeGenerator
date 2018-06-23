@@ -1,21 +1,22 @@
-
+'use strict';
 function renderMemeGallery(imgs) {
     var elGallery = $('.container');
     var renderMemesImgs = imgs.map(function (img) {
-        var renderMemeImg =
-            `
-         <img class="meme-img meme-${img.id}" src="${img.url}" onclick=renderEditor(${img.id})>
-         `;
-        return renderMemeImg;
+
+        return `
+                  <div onclick="renderEditor(${img.id})" class="hexagon" style="background-image: url('${img.url}')">
+                    <div class="hexTop"></div>
+                    <div class="hexBottom"></div>
+                </div>`;
 
     });
     elGallery.html(renderMemesImgs);
 };
+
 function clearGallery() {
-    $('.container').html('')
-
-
+    return $('.container').html('');
 }
+
 function renderEditor(selectedImgId) {
     window.scrollTo(0, 0);
     hideAndShow('container', 'editor');
@@ -23,13 +24,14 @@ function renderEditor(selectedImgId) {
     hideAndShow('search-container')
     hideAndShow('selected-keywords')
     gMeme.selectedImgId = selectedImgId;
-    renderCanvas(gMeme.selectedImgId);
+    renderCanvas(selectedImgId);
 }
-
 
 function renderCanvas(selectedImgId) {
     gCtx.clearRect(0, 0, gCanvas.width, gCanvas.height);
-    var canvasImg = document.querySelector('.meme-' + selectedImgId);
+    var imgUrl = gImgs[selectedImgId].url;
+    var canvasImg = new Image();
+    canvasImg.src = imgUrl;
     var imgWidth = canvasImg.naturalWidth;
     var imgHeight = canvasImg.naturalHeight;
     var imgRatio = 600 / imgWidth;
@@ -38,14 +40,6 @@ function renderCanvas(selectedImgId) {
     gCtx.drawImage(canvasImg, 0, 0, 600, imgHeight);
 }
 
-
-
-
-function hideAndShow(hide, show) {
-    if (hide) $('.' + hide).addClass('hideContent');
-    if (show) $('.' + show).removeClass('hideContent');
-
-}
 
 function renderText(txt) {
     gMeme.txts[gLineNum].line = txt
@@ -114,6 +108,7 @@ function colorChange(color) {
     renderText(gMeme.txts[gLineNum].line);
 
 }
+
 function fontSizeChange(fontSize) {
     $('.font-size').text(fontSize);
     gMeme.txts[gLineNum].size = fontSize;
@@ -131,19 +126,11 @@ function alignChange(align) {
     renderText(gMeme.txts[gLineNum].line);
 }
 
-function downloadCanvas(elLink) {
-    elLink.href = gCanvas.toDataURL();
-    elLink.download = 'meme.jpg';
-
-
-}
-
 function backToGallery() {
-    lastTextLength = 0;
+    lastTextLength = [0];
     lastText = [];
     gLineNum = 0;
     resetMeme();
-    $('.meme-lines').html('Plese type <input type="text" class="meme-text0" oninput="renderText(this.value)" onclick="changeLine(0)">')
     hideAndShow('editor', 'container');
     hideAndShow('', 'meme-filter');
     hideAndShow('', 'search-container')
@@ -166,10 +153,18 @@ function resetMeme() {
                 font: 'Impact'
             }]
     };
+    $('.meme-lines').html(  
+    `  
+    <div class="text-line-0 line-container">
+    Plese type
+     <button class="btn danger-btn" onclick="deleteLine(0)">x</button>
+     <input type="text" class="meme-text0" oninput="renderText(this.value)" onclick="changeLine(0)">
+     </div>
+    `)
+
+
 };
-function changeLine(lineNum) {
-    gLineNum = lineNum;
-}
+
 function addNewLine() {
     gMeme.txts.push(
         {
@@ -194,6 +189,7 @@ function addNewLine() {
         `;
     elLines.append(newElLines);
 }
+
 function getNewHeight() {
     var newHeight;
     var lastHeight = gMeme.txts[gMeme.txts.length - 1].height
@@ -202,6 +198,7 @@ function getNewHeight() {
     return newHeight;
 
 }
+
 function filterChange(filter) {
     clearGallery()
     if (filter === 'All') {
@@ -215,6 +212,7 @@ function filterChange(filter) {
     })
     renderMemeGallery(sortedImgs);
 }
+
 function toggleShadow() {
     var isShadow = gMeme.txts[gLineNum].shadow;
     if (!isShadow) gMeme.txts[gLineNum].shadow = true;
@@ -226,101 +224,77 @@ function fontFamilyChange(fontStr) {
     gMeme.txts[gLineNum].font = fontStr;
     renderText(gMeme.txts[gLineNum].line)
     $('.curr-font-family').text(fontStr)
-
-
 }
 
-function deleteLine(line) {
-    gMeme.txts[line].line = '';
-    gLineNum = line
+function deleteLine(lineNum) {
+    gMeme.txts[lineNum].line = '';
+    gLineNum = lineNum
     renderText('')
-    var selector = '.text-line-' + line
+    var selector = '.text-line-' + lineNum
     $(selector).remove()
-
-
 }
+
 function sumbit() {
     var mailContent = $('.mail-control').val()
     var subContent = $('.sub-control').val()
     var textContent = $('.form-control').val()
     window.location.assign(`https://mail.google.com/mail/?view=cm&fs=1&to=${mailContent}&su=${subContent}&body=${textContent}`)
-
 }
 
-
-function renderFilteredGallery(filterBy, isClick) {
-    if (filterBy === '') {
+function renderFilteredGallery(filterBy) {
+    if (!filterBy) {
         renderMemeGallery(gImgs)
         return;
     }
-    var isFoundMatch = false;
-    if (isClick) isFoundMatch = true;
-    if (!filterBy) {
-        var elKeywordsFilter = $('#filter');
-        var filterBy = elKeywordsFilter.value
-    }
+
     filterBy = filterBy.toLowerCase();
-    var filteredImages = gImgs.filter(function (img) {
-        var matchedImg = false;
-        for (i = 0; i < img.keywords.length; i++) {
-            var keywords = []
-            var keywordStr = img.keywords[i]
-            keywordStr = keywordStr.toLowerCase();
-            keywords.push(keywordStr)
-            if (keywordStr.includes(filterBy)) {
-                matchedImg = true;
-            }
-            if (keywordStr === filterBy && !isFoundMatch) {
-
-                isFoundMatch = true;
-                var selector = '.' + keywordStr;
-                if ($(selector).text() === keywordStr) {
-                    var selectedKeyword = findFilterInModal(filterBy)
-                    var currkeywordText = selectedKeyword[0].keyword
-                    var currkeywordSize = selectedKeyword[0].size
-                    currkeywordSize = +currkeywordSize;
-                    var newSize = (currkeywordSize + 10)
-                    $(selector).css('font-size', newSize + 'px');
-                    selectedKeywordsMap[selectedKeyword[0].id].keyword = currkeywordText
-                    selectedKeywordsMap[selectedKeyword[0].id].size = newSize
-
+    var filteredImages = [];
+    var isAdded = false;
+    gImgs.forEach(function (item) {
+        item.keywords.forEach(function (keyword) {
+            if (keyword.toLowerCase().includes(filterBy)) {
+                filteredImages.push(item);
+                var count = loadFromStorage(COUNT_KEY);
+                if (!count && !isAdded) {
+                    count = [keyword].reduce(function (acc, item) {
+                        if (!acc[item]) acc[item] = 1;
+                        else acc[item] += 1;
+                        isAdded = true;
+                        return acc;
+                    }, {})
+                    saveToStorage(COUNT_KEY, count);
+                } else {
+                    if (isAdded) return;
+                    if (!count[keyword]) count[keyword] = 1;
+                    else count[keyword] += 1;
+                    saveToStorage(COUNT_KEY, count);
+                    isAdded = true;
                 }
-                else {
-                    var selectedKeyword = findFilterInModal(filterBy)
-                    if (!selectedKeyword[0]) {
-                        var txt = filterBy;
-                        var size = 20;
-                        var currkeyword = {'id':selectedKeywordsMap.length,'keyword': txt, 'size':size }
-                        selectedKeywordsMap.push(currkeyword)
-                    }
-                    else{
-                        var txt=selectedKeyword[0].keyword
-                        var size=selectedKeyword[0].size
-                    }
-
-                }
-                debugger;
-
-                $(selector).html(txt);
-                $(selector).css('font-size',size + 'px')
-                saveToStorage(KeyForStorage, selectedKeywordsMap)
             }
-        }
-        return matchedImg
+        })
     })
     renderMemeGallery(filteredImages);
 }
-function findFilterInModal(currFilter) {
-    var foundKeyword = selectedKeywordsMap.filter(function (keyword) {
-        return (keyword.keyword === currFilter)
-    })
-    return foundKeyword
-}
 
-function renderselectedKeywords() {
-    selectedKeywordsMap.map(function (keyword) {
-        renderFilteredGallery(keyword.keyword)
+function renderTagsContainer() {
+    var tagsContainer = $('.selected-keywords');
+    var all = `<div class="search-key all" onclick="renderFilteredGallery('')">All</div>`;
+    tagsContainer.append(all);
+    gImgs.forEach(function (img) {
+        img.keywords.forEach(function (keyword) {
+            var elKeyword = $(`.${keyword}`);
+            if (elKeyword.length) {
+                var fontSize =  (window.innerWidth >1000)? parseInt(elKeyword.css('font-size')) + 7:  (window.innerWidth >620)? parseInt(elKeyword.css('font-size')) + 5 : parseInt(elKeyword.css('font-size'))+2.5;
+                elKeyword.css('font-size', fontSize + 'px');
+                return;
+            }
+            var strHtml = `<div style="font-size: 20px;" class="search-key ${keyword}" onclick="renderFilteredGallery('${keyword}')">${keyword}</div>`;
+            tagsContainer.append(strHtml);
+        })
     });
-    renderMemeGallery(gImgs)
 
+  
 }
+
+
+

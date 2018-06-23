@@ -5,3 +5,19 @@ function saveToStorage(key, value) {
 function loadFromStorage(key) {
     return JSON.parse(localStorage.getItem(key))
 }
+
+function hideAndShow(hide, show) {
+    if (hide) $('.' + hide).addClass('hideContent');
+    if (show) $('.' + show).removeClass('hideContent');
+
+}
+function downloadCanvas(elLink) {
+    elLink.href = gCanvas.toDataURL();
+    elLink.download = 'meme.jpg';
+}
+function changeLine(lineNum) {
+    gLineNum = lineNum;
+}
+function gotoContact(){
+    window.scrollTo(0, 4000);
+}
