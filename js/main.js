@@ -36,6 +36,7 @@ var gImgs = [
     { id: 21, url: 'img/patrick.jpg', keywords: ['Funny','Happy'] },
     { id: 22, url: 'img/putin.jpg', keywords: ['Funny','Politics'] },
     { id: 23, url: 'img/X-Everywhere.jpg', keywords: ['Cute'] },
+    { id: 23, url: 'img/img12.jpg', keywords: ['awkward'] },
 ];
 
 var gMeme = {

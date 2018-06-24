@@ -19,5 +19,8 @@ function changeLine(lineNum) {
     gLineNum = lineNum;
 }
 function gotoContact(){
-    window.scrollTo(0, 4000);
+    window.scrollTo(0, 20000);
+}
+function onFileInputChange(ev) {
+    handleImageFromInput(ev,renderCanvas)
 }

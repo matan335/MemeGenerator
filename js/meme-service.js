@@ -4,7 +4,7 @@ function renderMemeGallery(imgs) {
     var renderMemesImgs = imgs.map(function (img) {
 
         return `
-                  <div onclick="renderEditor(${img.id})" class="hexagon" style="background-image: url('${img.url}')">
+                  <div onclick="renderEditor(${img.id})" class="hexagon pointer" style="background-image: url('${img.url}')">
                     <div class="hexTop"></div>
                     <div class="hexBottom"></div>
                 </div>`;
@@ -23,8 +23,10 @@ function renderEditor(selectedImgId) {
     hideAndShow('meme-filter');
     hideAndShow('search-container')
     hideAndShow('selected-keywords')
+    hideAndShow('', 'share-container')
     gMeme.selectedImgId = selectedImgId;
     renderCanvas(selectedImgId);
+    $('.w-inline-block.social-share-btn.fb ').css('display','none')
 }
 
 function renderCanvas(selectedImgId) {
@@ -130,11 +132,16 @@ function backToGallery() {
     lastTextLength = [0];
     lastText = [];
     gLineNum = 0;
+    $('.share-container').html('')
+    $('.share-container').html('')
+    $('#imgData').val('')
     resetMeme();
+    window.scrollTo(0, 0);
     hideAndShow('editor', 'container');
     hideAndShow('', 'meme-filter');
     hideAndShow('', 'search-container')
     hideAndShow('', 'selected-keywords')
+    hideAndShow('', 'share-container')
 
 }
 
@@ -153,13 +160,15 @@ function resetMeme() {
                 font: 'Impact'
             }]
     };
-    $('.meme-lines').html(  
-    `  
-    <div class="text-line-0 line-container">
-    Plese type
-     <button class="btn danger-btn" onclick="deleteLine(0)">x</button>
-     <input type="text" class="meme-text0" oninput="renderText(this.value)" onclick="changeLine(0)">
-     </div>
+    $('.meme-lines').html(
+        `  
+        <button class="btn btn-editor add-line" onclick="addNewLine()">add Line</button>
+        <div class="text-line-0 line-container">
+          <div class="line-title">
+            Plese type
+          </div>
+          <input type="text" class="meme-text0 btn-editor" oninput="renderText(this.value)" onclick="changeLine(0)">
+        </div>
     `)
 
 
@@ -183,8 +192,10 @@ function addNewLine() {
     var newElLines =
         `  
         <div class="text-line-${gMeme.txts.length - 1} line-container">
-        your ${gMeme.txts.length} line:<button class="btn danger-btn" onclick="deleteLine(${gMeme.txts.length - 1})">x</button>
-        <input type="text" class="meme-text${gMeme.txts.length - 1}" oninput="renderText(this.value)"  onclick="changeLine(${gMeme.txts.length - 1})">
+         <div class="line-title">
+           Your ${gMeme.txts.length} line:<button class="btn danger-btn" onclick="deleteLine(${gMeme.txts.length - 1})">x</button>
+         </div>
+           <input type="text" class="meme-text${gMeme.txts.length - 1}  btn-editor" oninput="renderText(this.value)"  onclick="changeLine(${gMeme.txts.length - 1})">
         </div>
         `;
     elLines.append(newElLines);
@@ -198,7 +209,9 @@ function getNewHeight() {
     return newHeight;
 
 }
-
+function closeDropdown(currDrop) {
+    $('.' + currDrop + '-drop').toggle('hideContent')
+}
 function filterChange(filter) {
     clearGallery()
     if (filter === 'All') {
@@ -223,6 +236,7 @@ function toggleShadow() {
 function fontFamilyChange(fontStr) {
     gMeme.txts[gLineNum].font = fontStr;
     renderText(gMeme.txts[gLineNum].line)
+    fontStr=fontStr.substring(0, 10);
     $('.curr-font-family').text(fontStr)
 }
 
@@ -284,7 +298,7 @@ function renderTagsContainer() {
         img.keywords.forEach(function (keyword) {
             var elKeyword = $(`.${keyword}`);
             if (elKeyword.length) {
-                var fontSize =  (window.innerWidth >1000)? parseInt(elKeyword.css('font-size')) + 7:  (window.innerWidth >620)? parseInt(elKeyword.css('font-size')) + 5 : parseInt(elKeyword.css('font-size'))+2.5;
+                var fontSize = (window.innerWidth > 1000) ? parseInt(elKeyword.css('font-size')) + 7 : (window.innerWidth > 620) ? parseInt(elKeyword.css('font-size')) + 5 : parseInt(elKeyword.css('font-size')) + 2.5;
                 elKeyword.css('font-size', fontSize + 'px');
                 return;
             }
@@ -293,8 +307,61 @@ function renderTagsContainer() {
         })
     });
 
-  
+
+}
+function handleImageFromInput(ev, onImageReady) {
+    document.querySelector('.share-container').innerHTML = '';
+    var reader = new FileReader();
+
+    reader.onload = function (event) {
+        var img = new Image();
+        img.onload = onImageReady.bind(null, img);
+        img.src = event.target.result;
+        var newImgId = gImgs.length
+        gImgs.push({ id: newImgId, url: img.src, keywords: [''] }, )
+        gMeme.selectedImgId = newImgId
+        img.onload = onImageReady.bind(null, newImgId);
+    };
+    reader.readAsDataURL(ev.target.files[0]);
+
+
 }
 
+
+function uploadImg(elForm, ev) {
+    ev.preventDefault();
+  
+    document.getElementById('imgData').value = gCanvas.toDataURL('image/jpeg');
+  
+    // A function to be called if request succeeds
+    function onSuccess(uploadedImgUrl) {
+      console.log('uploadedImgUrl', uploadedImgUrl);
+      uploadedImgUrl = encodeURIComponent(uploadedImgUrl);
+      document.querySelector('.share-container').innerHTML = `
+          <a class="w-inline-block social-share-btn fb" href="https://www.facebook.com/sharer/sharer.php?u=${uploadedImgUrl}&t=${uploadedImgUrl}" title="Share on Facebook" target="_blank" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=${uploadedImgUrl}&t=${uploadedImgUrl}'); return false;">
+             Share   
+          </a>`;
+          $('.w-inline-block.social-share-btn.fb ').css('display','block')
+    }
+  
+    doUploadImg(elForm, onSuccess);
+  }
+  
+
+function doUploadImg(elForm, onSuccess) {
+    var formData = new FormData(elForm);
+
+    fetch('https://ca-upload.com/here/upload.php', {
+        method: 'POST',
+        body: formData
+    })
+        .then(function (response) {
+            return response.text();
+        })
+        .then(onSuccess)
+        .catch(function (error) {
+            console.error(error);
+        });
+}
 
 

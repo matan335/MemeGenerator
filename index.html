@@ -21,8 +21,7 @@
 <body onload="init()">
   <div class="navbar">
     <a class="nav-title">Meme Generator</a>
-    <a href="#home">Home</a>
-    <a href="#news">News</a>
+    <a href="#home" onclick="backToGallery()">Home</a>
     <a href="#contact" onclick="gotoContact()">Contact</a>
   </div>
   <div class="selected-keywords">
@@ -31,16 +30,21 @@
 
   <form role="search" class="search-container">
     <div class="filter">
-      Search meme by filter:
-      <label for="filter" class="sr-only">Filter images: </label>
-      <input type="search" id="filter" list="keywords" placeholder="Filter images..." oninput="renderFilteredGallery(this.value)"
-        name="">
-      <datalist id="keywords">
-        <option value="Happy" onclick="renderFilteredGallery(this.value)">
-          <option value="Funny" onclick="renderFilteredGallery(this.value)">
-            <option value="Angry" onclick="renderFilteredGallery(this.value)">
-              <option value="Awkward" onclick="renderFilteredGallery(this.value)">
-      </datalist>
+      <div>
+        Search meme by filter:
+      </div>
+
+      <div>
+        <label for="filter" class="sr-only">Filter images: </label>
+        <input type="search" id="filter" list="keywords" placeholder="Filter images..." oninput="renderFilteredGallery(this.value)"
+          name="">
+        <datalist id="keywords">
+          <option value="Happy" onclick="renderFilteredGallery(this.value)">
+            <option value="Funny" onclick="renderFilteredGallery(this.value)">
+              <option value="Angry" onclick="renderFilteredGallery(this.value)">
+                <option value="Awkward" onclick="renderFilteredGallery(this.value)">
+        </datalist>
+      </div>
     </div>
   </form>
 
@@ -55,100 +59,154 @@
 
 
   <div class="editor hideContent">
+
+
     <div class="img-container">
-      <button class="btn img-container-btn" onclick="backToGallery()">Back</button>
-      <a class="download-btn img-container-btn" onclick="downloadCanvas(this)">Download</a>
+      <div>
+        <input type="file" name="image" class="import-img" onchange="onFileInputChange(event)" />
+
+        <form action="" class="upload-form" method="POST" enctype="multipart/form-data" onsubmit="uploadImg(this, event)">
+          <input name="img" id="imgData" type="hidden" />
+          <button class="btn img-container-btn" onclick="backToGallery()">Back</button>
+          <a class="download-btn img-container-btn" onclick="downloadCanvas(this)">Download</a>
+          <button class="btn" type="submit"><span>Publish</span></button>
+          <div class="share-container"></div>
+        </form>
+      </div>
+
+
       <canvas class="canvas" width="600" height="400">
       </canvas>
 
     </div>
+
     <div class="img-editor-container">
+
+
+
       <div class="meme-lines">
+        <button class="btn btn-editor add-line" onclick="addNewLine()">add Line</button>
         <div class="text-line-0 line-container">
-
-
-          Plese type
-          <button class="btn danger-btn" onclick="deleteLine(0)">x</button>
-          <input type="text" class="meme-text0" oninput="renderText(this.value)" onclick="changeLine(0)">
+          <div class="line-title">
+            Plese type
+          </div>
+          <input type="text" class="meme-text0 btn-editor" oninput="renderText(this.value)" onclick="changeLine(0)">
         </div>
       </div>
-      <button class="btn" onclick="addNewLine()">add Line</button>
 
-      <span class="btngroup">
-        <button class="btn btngroup--btn" onclick="alignChange('left')">left</button>
-        <button class="btn btngroup--btn" onclick="alignChange('center')">center</button>
-        <button class="btn btngroup--btn" onclick="alignChange('right')">right</button>
-      </span>
-      Text Shadow:
-      <div>
-        <label class="switch">
-          <input type="checkbox">
-          <span class="slider round" onclick="toggleShadow()"></span>
-        </label>
+      <div class="img-edit-btn">
+        <div class="btngroup-container">
+          <span class="btngroup">
+            <button class="btn btngroup--btn btn-editor " onclick="alignChange('left')">left</button>
+            <button class="btn btngroup--btn btn-direction btn-editor" onclick="alignChange('center')">center</button>
+            <button class="btn btngroup--btn  btn-editor" onclick="alignChange('right')">right</button>
+          </span>
+        </div>
+
+        <div class="editor-change-font-btn">
+          <div class="dropdown">
+            <div class="btn-text">
+              Size:
+              <span class="font-size"></span>
+            </div>
+            <button class="dropbtn btn btn-editor" onclick="closeDropdown('size')">Size</button>
+            <div class="dropdown-content  size-drop">
+              <a class="btn" onclick="fontSizeChange(15)">15</a>
+              <a class="btn" onclick="fontSizeChange(25)">25</a>
+              <a class="btn" onclick="fontSizeChange(35)">35</a>
+              <a class="btn" onclick="fontSizeChange(40)">40</a>
+              <a class="btn" onclick="fontSizeChange(60)">60</a>
+              <a class="btn" onclick="fontSizeChange(75)">75</a>
+            </div>
+          </div>
+
+          <div class="dropdown font-family">
+              <div class="btn-text">
+                Font:
+                <span class="curr-font-family"></span>
+              </div>
+              <button class="dropbtn btn btn-editor" onclick="closeDropdown('font')">font</button>
+              <div class="dropdown-content font-drop">
+                <a class="btn" onclick="fontFamilyChange('Arial')">Arial</a>
+                <a class="btn" onclick="fontFamilyChange('Impact')">Impact</a>
+                <a class="btn" onclick="fontFamilyChange('Franklin Gothic Bold')">Franklin Gothic Bold</a>
+                <a class="btn" onclick="fontFamilyChange('Bitstream Vera Sans Bold')">Bitstream Vera Sans Bold,</a>
+  
+              </div>
+            </div>
+
+          <div class="font-options">
+            <div class="dropdown">
+              <div class="btn-text">
+                Color:
+                <span class="curr-color"></span>
+              </div>
+              <button class="dropbtn btn btn-editor" onclick="closeDropdown('color')">Color</button>
+              <div class="dropdown-content color-drop">
+                <a class="btn" onclick="colorChange('Pink')">Pink</a>
+                <a class="btn" onclick="colorChange('White')">White</a>
+                <a class="btn" onclick="colorChange('Green')">Green</a>
+                <a class="btn" onclick="colorChange('Black')">Black</a>
+                <a class="btn" onclick="colorChange('brown')">Brown</a>
+                <a class="btn" onclick="colorChange('Blue')">Blue</a>
+                <a class="btn" onclick="colorChange('Red')">Red</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="controls">
+          <button class="btn btn-direction btn-editor" onclick="changeLinePos('+')">↑</button>
+          <button class="btn btn-direction btn-editor" onclick="changeLinePos('-')">↓</button>
+          <div class="align-x">
+            <button class="btn arrow-horizontal btn-direction btn-editor" onclick="changeLinePos('left')">←</button>
+            <button class="btn arrow-horizontal btn-direction btn-editor" onclick="changeLinePos('right')">→</button>
+          </div>
+
+        </div>
+
+
+
+
+        <div class="second-btn-container">
+          <div class="btn-shadow">
+            Text Shadow:
+            <label class="switch">
+              <input type="checkbox">
+              <span class="slider round btn-editor" onclick="toggleShadow()"></span>
+            </label>
+          </div>
+
+          
+       
+       
+       
+       
+        </div>
       </div>
 
-      <div class="controls">
-        <button class="btn" onclick="changeLinePos('+')">↑</button>
-        <div class="align-x">
-          <button class="btn arrow-horizontal" onclick="changeLinePos('left')">←</button>
-          <button class="btn arrow-horizontal" onclick="changeLinePos('right')">→</button>
-        </div>
-        <button class="btn" onclick="changeLinePos('-')">↓</button>
-
-      </div>
-
-      <div class="font-options">
-        <div class="dropdown">
-          <div>
-            Color:
-            <span class="curr-color"></span>
-          </div>
-          <button class="dropbtn btn">Color</button>
-          <div class="dropdown-content">
-            <a class="btn" onclick="colorChange('Pink')">Pink</a>
-            <a class="btn" onclick="colorChange('White')">White</a>
-            <a class="btn" onclick="colorChange('Green')">Green</a>
-            <a class="btn" onclick="colorChange('Black')">Black</a>
-            <a class="btn" onclick="colorChange('brown')">Brown</a>
-            <a class="btn" onclick="colorChange('Blue')">Blue</a>
-            <a class="btn" onclick="colorChange('Red')">Red</a>
-          </div>
-        </div>
 
 
-        <div class="dropdown">
-          <div>
-            Font size:
-            <span class="font-size"></span>
-          </div>
-          <button class="dropbtn btn">font</button>
-          <div class="dropdown-content">
-            <a class="btn" onclick="fontSizeChange(15)">15</a>
-            <a class="btn" onclick="fontSizeChange(25)">25</a>
-            <a class="btn" onclick="fontSizeChange(35)">35</a>
-            <a class="btn" onclick="fontSizeChange(40)">40</a>
-            <a class="btn" onclick="fontSizeChange(60)">60</a>
-            <a class="btn" onclick="fontSizeChange(75)">75</a>
-          </div>
-        </div>
 
 
-        <div class="dropdown">
-          <div>
-            Font family:
-            <span class="curr-font-family"></span>
-          </div>
-          <button class="dropbtn btn">font</button>
-          <div class="dropdown-content">
-            <a class="btn" onclick="fontFamilyChange('Arial')">Arial</a>
-            <a class="btn" onclick="fontFamilyChange('Impact')">Impact</a>
-            <a class="btn" onclick="fontFamilyChange('Franklin Gothic Bold')">Franklin Gothic Bold</a>
-            <a class="btn" onclick="fontFamilyChange('Bitstream Vera Sans Bold')">Bitstream Vera Sans Bold,</a>
 
-          </div>
-        </div>
 
-      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -158,16 +216,35 @@
   </div>
 
   <div class="footer">
+    <div class="footer-display">
+      <div class="developer-img">
+        <div class="hexagon developer">
+          <div class="hexTop"></div>
+          <div class="hexBottom"></div>
+
+        </div>
+      </div>
+
+      <div class="developer-title">
+        <h1>
+          Matan Turgeman
+        </h1>
+        <h2>
+          High quality developer
+        </h2>
+      </div>
+
+    </div>
     <div class="footer-text">
-      <h1>
-        Matan Turgeman
-      </h1>
-      <h2>
-        High quality developer
-      </h2>
+
+
       <p>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempore ullam adipisci commodi aliquid aspernatur in deserunt itaque
-        nesciunt non ut. Quod libero itaque voluptates voluptatibus corrupti fugiat repellat soluta ipsam?
+        Hello I am Matan I am 22 years old
+        <br> I had learned engineering of electronics for 4 years,3 of them were in high school and 1 more year in college
+        <br> I had served in the Israeli army for 3 years, my major in the army was engineering parts of the tank ranked number2
+        <br> I started learning my coding carrer in Coding academy of Mr.Bit in Mat 2018 and hoping one day to be a seccseful
+        coder in the israeli world of high tec</p>
+
       </p>
     </div>
     <div class="contect-me">
